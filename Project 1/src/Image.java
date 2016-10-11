@@ -1,5 +1,6 @@
 
-public class Image {
+public class Image
+{
 
 
 }
