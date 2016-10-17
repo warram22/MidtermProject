@@ -1,54 +1,46 @@
-import java.io.IOException;
-import java.io.File;
-
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferInt;
+import java.awt.image.Raster;
+import java.awt.image.SinglePixelPackedSampleModel;
+import java.awt.image.WritableRaster;
 
 
-public class ImageInTest extends JPanel
+public class ImageInTest
 {
-
-	private BufferedImage image;
-
 	public static void main(String[] args) 
 	{
-		ImageInTest test = new ImageInTest();
+		BufferedImage image;
+		int width = 700;
+		int height = 700;
 		
-    }
-	public ImageInTest()
-	{
-		int width = 1500;
-		int height = 1000;
+		Image Image = new Image();
+		image = Image.MakeImage(width, height);
 		
-		File file = null;
-		JFrame frame = new JFrame();
+		PrintImage printIt = new PrintImage();
+		printIt.printObject(image, width, height);
 		
-		try
-		{
-			file = new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\Koala.jpg");
-			image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-			image = ImageIO.read(file);
-			System.out.print(image);
-			frame.setSize(width, height);
-			frame.setVisible(true);
-			frame.getContentPane().add(this);
-	        this.setBackground(Color.WHITE);
-	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			
-		}
-		catch(IOException e)
-		{
-			System.out.println("Error: "+e);
-		}
-	
-	}
-		@Override
-		protected void paintComponent(Graphics g) {
-		    super.paintComponent(g);
-		    g.drawImage(image, 0, 0, null); // see javadoc for more info on the
-		} 
+		
+		//everything below this line I have been messing around with. Not workable yet.
+		int[] pixels = Image.MakePixelArray(width, height);
+		DataBufferInt buffer = new DataBufferInt(pixels, (width*height));
+		int bitMask[] = new int[]{0xff0000, 0xff00, 0xff, 0xff000000};
+		
+		
+		SinglePixelPackedSampleModel sample = new SinglePixelPackedSampleModel(DataBuffer.TYPE_INT, width,height, bitMask);
+		
+		WritableRaster newRaster = Raster.createWritableRaster(sample, buffer, null);
+		
+		EncryptImage encryption = new EncryptImage();
+		
+		encryption.encryptArray(pixels);
+		
+		
+		/*String encodedString = Image.encodeImage();
+		byte[] imageArray = Image.decodeImage();
+		System.out.println(encodedString);
+		System.out.println(imageArray);
+		*/
+		
+    }	
 }
