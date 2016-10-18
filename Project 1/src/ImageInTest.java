@@ -31,11 +31,14 @@ public class ImageInTest
 		{
 			FileOutputStream FOUTS = encryption.encryptImage();
 			CipherInputStream CIS = encryption.getCipherIn();
-			
-		} catch (NoSuchAlgorithmException e)
+		} 
+		
+		catch (NoSuchAlgorithmException e)
 		{
 			e.printStackTrace();
-		} catch (NoSuchPaddingException e)
+		}
+		
+		catch (NoSuchPaddingException e)
 		{
 			e.printStackTrace();
 		}
@@ -43,17 +46,3 @@ public class ImageInTest
 		
     }	
 }
-/*String encodedString = Image.encodeImage();
-byte[] imageArray = Image.decodeImage();
-System.out.println(encodedString);
-System.out.println(imageArray);
-
-int[] pixels = Image.MakePixelArray(width, height);
-DataBufferInt buffer = new DataBufferInt(pixels, (width*height));
-int bitMask[] = new int[]{0xff0000, 0xff00, 0xff, 0xff000000};
-
-
-SinglePixelPackedSampleModel sample = new SinglePixelPackedSampleModel(DataBuffer.TYPE_INT, width,height, bitMask);
-
-WritableRaster newRaster = Raster.createWritableRaster(sample, buffer, null);
-*/

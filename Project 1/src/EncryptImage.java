@@ -18,38 +18,34 @@ import javax.crypto.SecretKeyFactory;
 
 public class EncryptImage extends Image
 {
-	private BufferedImage newImage = null; 
-	private KeyGenerator KG = null;
-    private SecretKey Key = null;
-    private Cipher cipher = null;
-    private FileOutputStream fouts = null;
-    private CipherInputStream cipherIn = null;
+	private BufferedImage newImage; 
+	private KeyGenerator KG;
+    private SecretKey Key;
+    private Cipher cipher;
+    private FileOutputStream fouts;
+    private CipherInputStream cipherIn;
     
 	public EncryptImage()
 	{
-//		try
-//		{
-//			keyGenerator = KeyGenerator.getInstance("AES");
-//            secretKey = keyGenerator.generateKey();
-//            
-//            cipher = Cipher.getInstance("AES");
-//		}
-//		catch(NoSuchPaddingException ex) 
-//		{
-//            System.out.println(ex);
-//        }
-//		
-//		catch (NoSuchAlgorithmException ex) 
-//		{
-//			System.out.println(ex);
-//		}
+		try
+		{
+			KG = KeyGenerator.getInstance("AES");
+			Key = KG.generateKey();
+            
+			cipher = Cipher.getInstance("AES");
+		}
+		catch(NoSuchPaddingException ex) 
+		{
+            System.out.println(ex);
+        }
+		
+		catch (NoSuchAlgorithmException ex) 
+		{
+			System.out.println(ex);
+		}
 	}
 	public FileOutputStream encryptImage() throws NoSuchAlgorithmException, NoSuchPaddingException
 	{
-		cipher = Cipher.getInstance("AES");
-		KG = KeyGenerator.getInstance("AES");
-		Key = KG.generateKey();
-		
 		try
 		{
 			cipher.init(cipher.ENCRYPT_MODE, Key);
@@ -58,10 +54,12 @@ public class EncryptImage extends Image
 		{
 			e.printStackTrace();
 		}
-			cipherIn = new CipherInputStream(super.getNewFile(), cipher);
+			
+		cipherIn = new CipherInputStream(super.getNewFile(), cipher);
+		
 		try
 		{
-			fouts = new FileOutputStream(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\index.png"));
+			fouts = new FileOutputStream(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\phoenix2.png"));//string of some sort from tester
 		}
 		catch (FileNotFoundException e)
 		{
@@ -69,6 +67,7 @@ public class EncryptImage extends Image
 		}
 		return fouts;
 	}
+	
 	public FileOutputStream getFouts()
 	{
 		return fouts;
@@ -89,13 +88,13 @@ public class EncryptImage extends Image
 	{
 		return cipherIn;
 	}
-	public void setKG(KeyGenerator kG)
+	public void setKG(KeyGenerator KG)
 	{
-		this.KG = kG;
+		this.KG = KG;
 	}
-	public void setKey(SecretKey key)
+	public void setKey(SecretKey Key)
 	{
-		this.Key = key;
+		this.Key = Key;
 	}
 	public void setCipherIn(CipherInputStream cipherIn) 
 	{
@@ -104,13 +103,3 @@ public class EncryptImage extends Image
 	
 	
 }
-/*
-
-
-public String encode(BufferedImage newImage)
-	{
-		byte[] byteArray = new byte[super.getImageSize()];
-		String imageAsString = Base64.getEncoder().encodeToString(byteArray);
-		return imageAsString;
-	}
-*/

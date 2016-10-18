@@ -22,7 +22,7 @@ public class Image
 	{
 		try
 		{
-			newFile = new FileInputStream(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\index.png"));
+			newFile = new FileInputStream(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\phoenix.png"));//make this a string that is passed from tester
 			
 		} 
 		catch (FileNotFoundException e1)
@@ -32,6 +32,7 @@ public class Image
 		
 		
 		newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		
 		try
 		{
 			newImage = ImageIO.read(newFile);
@@ -41,23 +42,6 @@ public class Image
 			e2.getStackTrace();
 		}
 		return newImage;
-	}
-	
-	public int[] MakePixelArray(int width, int height)
-	{
-		int pixels[] = new int[width*height];
-		PixelGrabber pixel = new PixelGrabber(newImage, 0, 0, width, height, pixels, 0 , width);
-		
-		try
-		{
-			pixel.grabPixels();
-		}
-		catch(InterruptedException e)
-		{
-			System.out.print("Error: " + e);
-		}
-		
-		return pixels;
 	}
 	
 	public BufferedImage getNewImage()
@@ -75,34 +59,3 @@ public class Image
 		this.newFile = newFile;
 	}
 }
-/* This stuff is not needed at the moment
- * public String encodeImage()
-
-{
-	ImageArray = new byte[getImageSize()];
-	try
-	{
-		FileInputStream imageStream = new FileInputStream(newFile);
-		imageStream.read(ImageArray);
-		imageStream.close();
-	}
-	catch (FileNotFoundException e)
-	{
-		e.printStackTrace();
-	}
-	catch (IOException e)
-	{
-		e.getStackTrace();
-	}
-	
-	imageAsString = Base64.getEncoder().encodeToString(ImageArray);
-	
-	return imageAsString;
-}
-
-public byte[] decodeImage()
-{
-	byte[] decodedImage = Base64.getDecoder().decode(imageAsString);
-	return decodedImage;
-}
-*/
