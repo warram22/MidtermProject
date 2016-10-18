@@ -1,6 +1,8 @@
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 //import java.util.Base64;
 
@@ -9,28 +11,34 @@ import javax.imageio.ImageIO;
 public class Image
 { 
 	BufferedImage newImage = null;
-	File newFile = null;
-	//private byte[] ImageArray;
-	//private String imageAsString;
-	private int imageSize;
+	FileInputStream newFile = null;
 	
 	public Image()
 	{
 		
 	}
-	
+
 	public BufferedImage MakeImage(int width, int height)
 	{
-		newFile = new File("C:\\Users\\Thomas\\Pictures\\phoenix3.png");
-		setImageSize((int) newFile.length());
+		try
+		{
+			newFile = new FileInputStream(new File("C:\\Users\\Thomas\\Pictures\\phoenix3.png"));
+			
+		} 
+		catch (FileNotFoundException e1)
+		{
+			e1.printStackTrace();
+		}
+		
+		
 		newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		try
 		{
 			newImage = ImageIO.read(newFile);
 		} 
-		catch (IOException e)
+		catch (IOException e2)
 		{
-			e.getStackTrace();
+			e2.getStackTrace();
 		}
 		return newImage;
 	}
@@ -52,19 +60,19 @@ public class Image
 		return pixels;
 	}
 	
-	public BufferedImage reMakeImage()
+	public BufferedImage getNewImage()
 	{
 		return newImage;
 	}
 	
-	public int getImageSize()
+	public FileInputStream getNewFile()
 	{
-		return imageSize;
+		return newFile;
 	}
 
-	public void setImageSize(int imageSize) 
+	public void setNewFile(FileInputStream newFile) 
 	{
-		this.imageSize = imageSize;
+		this.newFile = newFile;
 	}
 }
 /* This stuff is not needed at the moment
