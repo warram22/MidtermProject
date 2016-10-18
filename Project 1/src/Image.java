@@ -22,7 +22,7 @@ public class Image
 	{
 		try
 		{
-			newFile = new FileInputStream(new File("C:\\Users\\Thomas\\Pictures\\phoenix3.png"));
+			newFile = new FileInputStream(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\index.png"));
 			
 		} 
 		catch (FileNotFoundException e1)
