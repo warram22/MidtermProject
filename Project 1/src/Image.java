@@ -21,7 +21,7 @@ public class Image
 	
 	public BufferedImage MakeImage(int width, int height)
 	{
-		newFile = new File("C:\\Users\\Thomas\\Pictures\\phoenix.jpg");
+		newFile = new File("C:\\Users\\Thomas\\Pictures\\phoenix3.png");
 		setImageSize((int) newFile.length());
 		newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		try

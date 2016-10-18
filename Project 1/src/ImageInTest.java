@@ -11,8 +11,8 @@ public class ImageInTest
 	public static void main(String[] args) 
 	{
 		BufferedImage image;
-		int width = 700;
-		int height = 700;
+		int width = 1200;
+		int height = 1200;
 		
 		Image Image = new Image();
 		image = Image.MakeImage(width, height);
