@@ -61,7 +61,7 @@ public class EncryptImage extends Image
 			cipherIn = new CipherInputStream(super.getNewFile(), cipher);
 		try
 		{
-			fouts = new FileOutputStream(new File("C:\\Users\\Thomas\\Pictures\\phoenix3.png"));
+			fouts = new FileOutputStream(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\index.png"));
 		}
 		catch (FileNotFoundException e)
 		{
