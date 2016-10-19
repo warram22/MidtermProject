@@ -16,33 +16,31 @@ public class ImageInTest
 	public static void main(String[] args) 
 	{
 		BufferedImage image;
-		int width = 1200;
-		int height = 1200;
+		int width = 500;
+		int height = 500;
+		String Path = "C:\\Users\\Thomas\\Pictures\\Project 1 Pics\\phoenix.png";//so that we can easily change the path name!
+		String encryptedPath = "C:\\Users\\Thomas\\Pictures\\Project 1 Pics\\phoenix2.png";
+		String decrytpedPath = "C:\\Users\\Thomas\\Pictures\\Project 1 Pics\\phoenix3.png";
 		
 		Image Image = new Image();
-		image = Image.MakeImage(width, height);
+		image = Image.MakeImage(width, height, Path);
 		
 		PrintImage printIt = new PrintImage();
 		printIt.printObject(image, width, height);
 		
-		EncryptImage encryption = new EncryptImage();
-		
+		Crypto encryption = new Crypto();
 		try
 		{
-			FileOutputStream FOUTS = encryption.encryptImage();
-			CipherInputStream CIS = encryption.getCipherIn();
+			encryption.encryptImage(encryptedPath);
 		} 
-		
 		catch (NoSuchAlgorithmException e)
 		{
 			e.printStackTrace();
-		}
-		
+		} 
 		catch (NoSuchPaddingException e)
 		{
 			e.printStackTrace();
 		}
-		
 		
     }	
 }

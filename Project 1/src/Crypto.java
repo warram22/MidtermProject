@@ -10,13 +10,14 @@ import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 
 
-public class EncryptImage extends Image
+public class Crypto extends Image
 {
 	private BufferedImage newImage; 
 	private KeyGenerator KG;
@@ -24,8 +25,9 @@ public class EncryptImage extends Image
     private Cipher cipher;
     private FileOutputStream fouts;
     private CipherInputStream cipherIn;
+    private CipherOutputStream COS;
     
-	public EncryptImage()
+	public Crypto()
 	{
 		try
 		{
@@ -44,7 +46,7 @@ public class EncryptImage extends Image
 			System.out.println(ex);
 		}
 	}
-	public FileOutputStream encryptImage() throws NoSuchAlgorithmException, NoSuchPaddingException
+	public void encryptImage(String FilePath) throws NoSuchAlgorithmException, NoSuchPaddingException
 	{
 		try
 		{
@@ -59,15 +61,21 @@ public class EncryptImage extends Image
 		
 		try
 		{
-			fouts = new FileOutputStream(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\phoenix2.png"));//string of some sort from tester
+			fouts = new FileOutputStream(new File(FilePath));
+			//COS = new CipherOutputStream(COS, cipher); I think we need this for decyrpt but didnt have time to figure it out at the moment...
 		}
 		catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
 		}
-		return fouts;
 	}
 	
+	public void DecrytImage()
+	{
+		
+	}
+	
+	//not sure if we actually need these or not but at the moment I am leaving them we can talk about it after its done!
 	public FileOutputStream getFouts()
 	{
 		return fouts;

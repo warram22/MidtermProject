@@ -10,19 +10,19 @@ import javax.imageio.ImageIO;
 
 public class Image
 { 
-	BufferedImage newImage = null;
-	FileInputStream newFile = null;
+	BufferedImage newImage;
+	FileInputStream newFile;
 	
 	public Image()
 	{
-		
+		//some or most of the Make image could move here???? IDK
 	}
 
-	public BufferedImage MakeImage(int width, int height)
+	public BufferedImage MakeImage(int width, int height, String FilePath)
 	{
 		try
 		{
-			newFile = new FileInputStream(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\phoenix.png"));//make this a string that is passed from tester
+			newFile = new FileInputStream(new File(FilePath));
 			
 		} 
 		catch (FileNotFoundException e1)
