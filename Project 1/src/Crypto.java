@@ -6,15 +6,19 @@ import java.io.FileOutputStream;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.Base64;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.SecretKeySpec;
 
 
 public class Crypto extends Image
@@ -27,14 +31,14 @@ public class Crypto extends Image
     private CipherInputStream cipherIn;
     private CipherOutputStream COS;
     
-	public Crypto()
+	public Crypto() throws NoSuchProviderException
 	{
 		try
 		{
-			KG = KeyGenerator.getInstance("AES");
-			Key = KG.generateKey();
+			//KG = KeyGenerator.getInstance("AES");
+			//Key = KG.generateKey();
             
-			cipher = Cipher.getInstance("AES");
+			cipher = Cipher.getInstance("AES/ECB/NoPadding", "DSA");
 		}
 		catch(NoSuchPaddingException ex) 
 		{
@@ -46,11 +50,12 @@ public class Crypto extends Image
 			System.out.println(ex);
 		}
 	}
-	public void encryptImage(String FilePath) throws NoSuchAlgorithmException, NoSuchPaddingException
+	public void encryptImage(String FilePath) throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException
 	{
 		try
 		{
 			cipher.init(cipher.ENCRYPT_MODE, Key);
+			byte[] wrappedKey = cipher.doFinal(Key.getEncoded());
 		} 
 		catch (InvalidKeyException e)
 		{
@@ -72,7 +77,8 @@ public class Crypto extends Image
 	
 	public void DecrytImage()
 	{
-		
+		//cipher.init(Cipher.DECRYPT_MODE, Key);
+		//Key key = new SecretKeySpec(cipher.doFinal(wrappedKey), "AES");
 	}
 	
 	//not sure if we actually need these or not but at the moment I am leaving them we can talk about it after its done!

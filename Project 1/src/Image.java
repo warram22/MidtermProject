@@ -17,6 +17,10 @@ public class Image
 	{
 		//some or most of the Make image could move here???? IDK
 	}
+	
+	public Image(BufferedImage image){
+		newImage = image;
+	}
 
 	public BufferedImage MakeImage(int width, int height, String FilePath)
 	{
