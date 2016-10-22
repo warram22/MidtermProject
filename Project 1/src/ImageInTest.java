@@ -1,46 +1,32 @@
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
-import java.awt.image.DataBufferInt;
-import java.awt.image.Raster;
-import java.awt.image.SinglePixelPackedSampleModel;
-import java.awt.image.WritableRaster;
-import java.io.FileOutputStream;
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.CipherInputStream;
-import javax.crypto.NoSuchPaddingException;
-
+import java.io.IOException;
 
 public class ImageInTest
 {
-	public static void main(String[] args) 
+	public static void main(String[] args)  
 	{
-		BufferedImage image;
 		int width = 500;
 		int height = 500;
-		String Path = "C:\\Users\\Thomas\\Pictures\\Project 1 Pics\\phoenix.png";//so that we can easily change the path name!
-		String encryptedPath = "C:\\Users\\Thomas\\Pictures\\Project 1 Pics\\phoenix2.png";
-		String decrytpedPath = "C:\\Users\\Thomas\\Pictures\\Project 1 Pics\\phoenix3.png";
+		String normalPath = "C:\\Users\\Thomas\\Pictures\\Project 1 Pics\\phoenix.png";
+		String encryptedPath = "C:\\Users\\Thomas\\Pictures\\Project 1 Pics\\Encrypted.png";
+		String decryptedPath = "C:\\Users\\Thomas\\Pictures\\Project 1 Pics\\Decrypted.png";
 		
-		Image Image = new Image();
-		image = Image.MakeImage(width, height, Path);
-		
-		PrintImage printIt = new PrintImage();
-		printIt.printObject(image, width, height);
-		
-		Crypto encryption = new Crypto();
+		ImageEncryption newEncryption = new ImageEncryption();
 		try
 		{
-			encryption.encryptImage(encryptedPath);
-		} 
-		catch (NoSuchAlgorithmException e)
-		{
-			e.printStackTrace();
-		} 
-		catch (NoSuchPaddingException e)
+			newEncryption.encryptImage(normalPath, encryptedPath);
+			newEncryption.DecryptImage(encryptedPath, decryptedPath);	
+		}
+		
+		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
+		
+		PrintImage printIt = new PrintImage();
+		printIt.printObject(newEncryption.MakeImage(width, height, normalPath), width, height);
+		printIt.printObject(newEncryption.MakeImage(width, height, encryptedPath), width, height);
+		printIt.printObject(newEncryption.MakeImage(width, height, decryptedPath), width, height);
+		
 		
     }	
 }
