@@ -13,6 +13,8 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
+
+//there is 14 libraries lol
 public class ImageEncryption
 { 
 	private BufferedImage newImage;
@@ -40,7 +42,7 @@ public class ImageEncryption
 		Key = KG.generateKey();
 	}
 
-	public BufferedImage MakeImage(int width, int height, String FilePath)
+	public BufferedImage MakeImage(String FilePath)
 	{
 		
 		try
@@ -57,24 +59,25 @@ public class ImageEncryption
 		}
 		
 		return newImage;
-	}  
-		
+	}
+	
 	public void encryptImage(String FilePath, String EncryptedPath)
 	{
 		try
 		{
 			EncryptCipher = Cipher.getInstance("AES");
-			EncryptCipher.init(EncryptCipher.ENCRYPT_MODE, Key);
+			EncryptCipher.init(Cipher.ENCRYPT_MODE, Key);
 			ECI = new CipherInputStream(new FileInputStream(new File(FilePath)), EncryptCipher);
-			EFOS = new FileOutputStream(new File(EncryptedPath));
+			EFOS = new FileOutputStream(new File(EncryptedPath));//creates new location for encrypted file
 			
 			int i; 
 			while((i = ECI.read())!=-1)//this reads from the cipher
 			{
 				EFOS.write(i);//this writes the bytes(stored in i) to the newly created file
 			}
-			EFOS.flush();
 			
+			EFOS.flush();
+			ECI.close();
 			EFOS.close();
 		}
 		catch(NoSuchPaddingException ex) 
@@ -103,11 +106,10 @@ public class ImageEncryption
 	{
 		try
 		{
-			
 			DecryptCipher = Cipher.getInstance("AES");
-			DecryptCipher.init(DecryptCipher.DECRYPT_MODE, Key);
+			DecryptCipher.init(Cipher.DECRYPT_MODE, Key);
 			DCI = new CipherInputStream(new FileInputStream(new File(EncryptedPath)), DecryptCipher);
-			DFOS = new FileOutputStream(new File(DecryptedPath));
+			DFOS = new FileOutputStream(new File(DecryptedPath));//creates new location for decrypted file
 			
 			int i; 
 			while((i = DCI.read())!= -1)//reads bytes from the cipher which is using an input stream with the encrypted Path 
@@ -115,7 +117,8 @@ public class ImageEncryption
 				DFOS.write(i);//writes the bytes (stored in i) to the output stream to the decrypted path
 			}
 			DFOS.flush();
-			DFOS.flush();
+			DCI.close();
+			DFOS.close();
 		} 
 		catch (InvalidKeyException e)
 		{
@@ -129,5 +132,5 @@ public class ImageEncryption
 		{
 			e.printStackTrace();
 		}	
-	}		
+	}
 }

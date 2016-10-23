@@ -14,7 +14,7 @@ public class PrintImage extends JPanel
 	{
 		this.image = image;
 		JFrame frame = new JFrame();
-		frame.setSize(width, height);
+		frame.setSize(width + 100, height + 100);
 		frame.setVisible(true);
 		frame.getContentPane().add(this);
 	    this.setBackground(Color.WHITE);
