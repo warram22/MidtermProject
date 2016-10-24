@@ -1,3 +1,4 @@
+import java.awt.RenderingHints.Key;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,18 +8,25 @@ import javax.imageio.ImageIO;
 import java.io.FileOutputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Security;
+
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 
-//there is 14 libraries lol
+//there are 14 libraries lol
 public class ImageEncryption
 { 
 	private BufferedImage newImage;
-	private KeyGenerator KG;
+	private KeyGenerator generator;
     private SecretKey Key;
     private Cipher EncryptCipher;
     private Cipher DecryptCipher;
@@ -27,19 +35,38 @@ public class ImageEncryption
     private CipherInputStream ECI;
     private CipherInputStream DCI;
     
-	public ImageEncryption()
+	public ImageEncryption() throws NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
 	{
 		newImage = null;
 		try
 		{
-			KG = KeyGenerator.getInstance("AES");
+			generator = KeyGenerator.getInstance("AES");
+		    Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());    
+		    KeyGenerator generator = KeyGenerator.getInstance("AES", "BC");
+		    generator.init(128);
+		    SecretKey keyToBeWrapped = generator.generateKey();
+		    System.out.println("input    : " + new String(keyToBeWrapped.getEncoded()));
+
+		    // create a wrapper and do the wrapping
+		    Cipher cipher = Cipher.getInstance("AES/ECB/NoPadding", "BC");
+		    KeyGenerator keyGen = KeyGenerator.getInstance("AES",  "BC");
+		    keyGen.init(256);
+		    SecretKey wrapKey = keyGen.generateKey();
+		    cipher.init(Cipher.ENCRYPT_MODE, wrapKey);
+		    byte[] wrappedKey = cipher.doFinal(keyToBeWrapped.getEncoded());
+		    System.out.println("wrapped  : " + new String(wrappedKey));
+
+		    // unwrap the wrapped key
+		    cipher.init(Cipher.DECRYPT_MODE, wrapKey);
+		    SecretKeySpec key = new SecretKeySpec(cipher.doFinal(wrappedKey), "AES");
+		    System.out.println("unwrapped: " + new String(key.getEncoded()));
 		}
 		
 		catch (NoSuchAlgorithmException e)
 		{
 			e.printStackTrace();
 		}
-		Key = KG.generateKey();
+		Key = generator.generateKey();
 	}
 
 	public BufferedImage MakeImage(String FilePath)
@@ -102,7 +129,7 @@ public class ImageEncryption
 		}
 	}
 	
-	public void DecryptImage(String EncryptedPath, String DecryptedPath) throws IOException
+	public void DecryptImage(String EncryptedPath, String DecryptedPath) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException
 	{
 		try
 		{
@@ -121,14 +148,6 @@ public class ImageEncryption
 			DFOS.close();
 		} 
 		catch (InvalidKeyException e)
-		{
-			e.printStackTrace();
-		} 
-		catch (NoSuchAlgorithmException e)
-		{
-			e.printStackTrace();
-		} 
-		catch (NoSuchPaddingException e)
 		{
 			e.printStackTrace();
 		}	

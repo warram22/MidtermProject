@@ -1,13 +1,20 @@
 //import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class ImageInTest
 {
-	public static void main(String[] args)  
+	public static void main(String[] args) throws InvalidKeyException, NoSuchProviderException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException  
 	{
-		String normalPath = "C:\\Users\\Thomas\\Pictures\\Project 1 Pics\\phoenix.png";
-		String encryptedPath = "C:\\Users\\Thomas\\Pictures\\Project 1 Pics\\Encrypted.png";
-		String decryptedPath = "C:\\Users\\Thomas\\Pictures\\Project 1 Pics\\Decrypted.png";
+		String normalPath = "C:\\Users\\Sassy\\Pictures\\Saved Pictures\\guinea.png";
+		String encryptedPath = "C:\\Users\\Sassy\\Pictures\\Saved Pictures\\Encrypted.png";
+		String decryptedPath = "C:\\Users\\Sassy\\Pictures\\Saved Pictures\\Decrypted.png";
 		
 		ImageEncryption newEncryption = new ImageEncryption();
 		try
