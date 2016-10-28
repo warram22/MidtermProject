@@ -10,7 +10,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -22,51 +21,37 @@ import javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 
-//there are 14 libraries lol
+//there are 21 libraries haha
 public class ImageEncryption
 { 
 	private BufferedImage newImage;
 	private KeyGenerator generator;
-    private SecretKey Key;
     private Cipher EncryptCipher;
     private Cipher DecryptCipher;
+    private byte[] wrappedKey;
+    private SecretKey wrapKey;
+    private SecretKey keyToBeWrapped;
     private FileOutputStream EFOS;
     private FileOutputStream DFOS;
     private CipherInputStream ECI;
     private CipherInputStream DCI;
     
-	public ImageEncryption() throws NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
+	public ImageEncryption() throws NoSuchProviderException
 	{
 		newImage = null;
 		try
 		{
 			generator = KeyGenerator.getInstance("AES");
 		    Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());    
-		    KeyGenerator generator = KeyGenerator.getInstance("AES", "BC");
+		    generator = KeyGenerator.getInstance("AES", "BC");
 		    generator.init(128);
-		    SecretKey keyToBeWrapped = generator.generateKey();
+		    keyToBeWrapped = generator.generateKey();
 		    System.out.println("input    : " + new String(keyToBeWrapped.getEncoded()));
-
-		    // create a wrapper and do the wrapping
-		    Cipher cipher = Cipher.getInstance("AES/ECB/NoPadding", "BC");
-		    KeyGenerator keyGen = KeyGenerator.getInstance("AES",  "BC");
-		    keyGen.init(256);
-		    SecretKey wrapKey = keyGen.generateKey();
-		    cipher.init(Cipher.ENCRYPT_MODE, wrapKey);
-		    byte[] wrappedKey = cipher.doFinal(keyToBeWrapped.getEncoded());
-		    System.out.println("wrapped  : " + new String(wrappedKey));
-
-		    // unwrap the wrapped key
-		    cipher.init(Cipher.DECRYPT_MODE, wrapKey);
-		    SecretKeySpec key = new SecretKeySpec(cipher.doFinal(wrappedKey), "AES");
-		    System.out.println("unwrapped: " + new String(key.getEncoded()));
 		}
-		
 		catch (NoSuchAlgorithmException e)
 		{
 			e.printStackTrace();
 		}
-		Key = generator.generateKey();
 	}
 
 	public BufferedImage MakeImage(String FilePath)
@@ -88,12 +73,21 @@ public class ImageEncryption
 		return newImage;
 	}
 	
-	public void encryptImage(String FilePath, String EncryptedPath)
+	public void encryptImage(String FilePath, String EncryptedPath) throws NoSuchProviderException, IllegalBlockSizeException, BadPaddingException
 	{
 		try
 		{
 			EncryptCipher = Cipher.getInstance("AES");
-			EncryptCipher.init(Cipher.ENCRYPT_MODE, Key);
+			EncryptCipher.init(Cipher.ENCRYPT_MODE, keyToBeWrapped);
+			
+			Cipher keyCipher = Cipher.getInstance("AES/ECB/NoPadding", "BC");
+			KeyGenerator keyGen = KeyGenerator.getInstance("AES",  "BC");
+			keyGen.init(128);
+			wrapKey = keyGen.generateKey();
+			keyCipher.init(Cipher.ENCRYPT_MODE, wrapKey);
+			wrappedKey = keyCipher.doFinal(keyToBeWrapped.getEncoded());
+			System.out.println("wrapped  : " + new String(wrappedKey));
+			
 			ECI = new CipherInputStream(new FileInputStream(new File(FilePath)), EncryptCipher);
 			EFOS = new FileOutputStream(new File(EncryptedPath));//creates new location for encrypted file
 			
@@ -129,12 +123,17 @@ public class ImageEncryption
 		}
 	}
 	
-	public void DecryptImage(String EncryptedPath, String DecryptedPath) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException
+	public void DecryptImage(String EncryptedPath, String DecryptedPath) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, NoSuchProviderException, IllegalBlockSizeException, BadPaddingException
 	{
 		try
 		{
+			Cipher keyCipher =  Cipher.getInstance("AES/ECB/NoPadding", "BC");
+			keyCipher.init(Cipher.DECRYPT_MODE, wrapKey);
+			SecretKeySpec key = new SecretKeySpec(keyCipher.doFinal(wrappedKey), "AES");
+			System.out.println("unwrapped: " + new String(key.getEncoded()));
+			
 			DecryptCipher = Cipher.getInstance("AES");
-			DecryptCipher.init(Cipher.DECRYPT_MODE, Key);
+			DecryptCipher.init(Cipher.DECRYPT_MODE, key );
 			DCI = new CipherInputStream(new FileInputStream(new File(EncryptedPath)), DecryptCipher);
 			DFOS = new FileOutputStream(new File(DecryptedPath));//creates new location for decrypted file
 			
